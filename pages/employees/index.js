@@ -5,24 +5,21 @@ import Link from 'next/link';
 
 export async function getServerSideProps(context) {
   try {
-    const [usersRes, categoriesRes] = await Promise.all([
-      fetch('https://dummyjson.com/users?limit=100'),
-      fetch('https://dummyjson.com/products/categories')
-    ]);
+    const usersRes = await fetch('https://dummyjson.com/users?limit=100');
 
-    if (!usersRes.ok || !categoriesRes.ok) {
-      throw new Error('Failed to fetch data');
+    if (!usersRes.ok) {
+      throw new Error('Failed to fetch users data');
     }
 
-    const [usersData, categoriesData] = await Promise.all([
-      usersRes.json(),
-      categoriesRes.json()
-    ]);
+    const usersData = await usersRes.json();
+    const employees = usersData.users || [];
+
+    const departments = [...new Set(employees.map(employee => employee.company?.department).filter(Boolean))];
 
     return {
       props: {
-        employees: usersData.users || [],
-        departments: categoriesData.categories || [], 
+        employees,
+        departments,
       },
     };
   } catch (error) {

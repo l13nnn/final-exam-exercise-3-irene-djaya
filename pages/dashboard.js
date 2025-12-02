@@ -79,12 +79,7 @@ export default function Dashboard({ totalEmployees, departments }) {
     loadMoreEmployees();
   }, []);
 
-  // Get unique departments from loaded employees
   const uniqueDepartments = Array.from(new Set(employeeList.map(employee => employee.company?.department).filter(Boolean)));
-
-
-
-
 
   return (
     <div style={{ padding: '20px', background: theme === 'dark' ? '#222' : '#f0f2f5', minHeight: '100vh' }}>
